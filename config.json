@@ -1,0 +1,9 @@
+{
+    "observerLatitude": 45.8007017,
+    "observerLongitude": 15.9712165,
+    "observerAltitude": 130,
+    "maxInactiveTime": 3000,
+    "recordTime": 3000,
+    "timeZone": "Europe/Zagreb",
+    "recordsFile": "./records.txt"
+}

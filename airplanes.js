@@ -1,5 +1,8 @@
 
+const { time } = require('console');
 const { Calculate }  = require('./geoUtils');
+const fs = require('fs');
+
 
 class Airplane {
     constructor(data, olat, olon, oalt) {
@@ -51,21 +54,21 @@ class Airplane {
 }
 
 class AirplaneList {
-    constructor(recordTime, olat, olon, oalt) {
+    constructor(recordTime, olat, olon, oalt, filePath, datetimeOptions) {
         this.activeAirplanes = new Map();
-        this.airplaneRecords = [];
         this.recordTime = recordTime;
         this.olat = Number(olat);
         this.olon = Number(olon);
         this.oalt = Number(oalt);
+        this.filePath = filePath;
+        this.datetimeOptions = datetimeOptions;
     }
 
     updateOrAddAirplane(data) {
         const airplaneId = data[4];
 
         // new airplane
-        if (!this.activeAirplanes.has(airplaneId)) {  
-            console.log("IN for " + airplaneId);  
+        if (!this.activeAirplanes.has(airplaneId)) {
             const newAirplane = new Airplane(data, this.olat, this.olon, this.oalt);
             this.activeAirplanes.set(airplaneId, newAirplane);
         } else { // existing airplane                                        
@@ -73,10 +76,21 @@ class AirplaneList {
             existingAirplane.update(data, this.olat, this.olon, this.oalt);
 
             const timeDifference = existingAirplane.lastUpdateTime - existingAirplane.updateHistory[existingAirplane.updateHistory.length - 2]?.timestamp || 0;
-
             // keeping record
-            if (timeDifference > this.recordTime) {
-                this.airplaneRecords.push({ airplaneId, data, timestamp: existingAirplane.lastUpdateTime });
+            if (timeDifference*1000 > this.recordTime && 
+                existingAirplane.aircraftId !== null &&
+                existingAirplane.latitude !== "" &&
+                existingAirplane.longitude !== "" &&
+                existingAirplane.altitude !== "" &&
+                existingAirplane.azimuth !== undefined &&
+                existingAirplane.elevationAngle !== NaN
+            ) {
+                // ovdje se dodaje zapis 
+                var record = existingAirplane.aircraftId + ", " + existingAirplane.latitude + ", " 
+                                + existingAirplane.longitude + ", " + existingAirplane.altitude + ", " 
+                                + existingAirplane.azimuth + ", " + existingAirplane.elevationAngle;
+                console.log(record);
+                this.updateRecord(record, this.filePath, this.datetimeOptions);
             }
         }
     }
@@ -91,7 +105,19 @@ class AirplaneList {
             }
         }
     }
+    updateRecord(record) {
+        const datum = new Date().toLocaleString('hr-HR');
+        const formatiraniZapis = `${(new Date()).toLocaleString('en-HR', this.datetimeOptions)}: ${record}\n`;
+          console.log(formatiraniZapis);
+        fs.appendFileSync(this.filePath, formatiraniZapis, 'utf8', (err) => {
+          if (err) {
+            console.error('Greška prilikom dodavanja zapisa u datoteku:', err);
+            return;
+          }
+        });
+      }
 }
+
 
 
 module.exports = {
