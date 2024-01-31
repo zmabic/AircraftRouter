@@ -103,8 +103,6 @@ function NormalizeVectorDiff(b, a) {
 
 function Calculate(olat, olon, oalt, lat, lon, alt) {
     // turning altitude from feet to meters
-    oalt *= 0.3048;
-    alt *= 0.3048;
     var a = {lat: olat, lon: olon, elv: olat};
     var b = {lat, lon, elv: alt};
     if (a !== null) {

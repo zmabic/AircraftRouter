@@ -25,11 +25,13 @@ class Airplane {
         // Update non null values
         this.latitude = Number(newData[14] !== "" ? newData[14] : this.latitude);
         this.longitude = Number(newData[15] !== "" ? newData[15] : this.longitude);
-        this.altitude = Number(newData[11] !== "" ? newData[11] : this.altitude);
+        if(newData[11] !== "") {
+            this.altitude = Number(newData[11]) * 0.3048;
+        }
         this.groundSpeed = Number(newData[13] !== "" ? newData[13] : this.groundSpeed);
         this.verticalRate = Number(newData[15] !== "" ? newData[15] : this.verticalRate);
         this.isOnGround = newData[20] !== "" ? newData[20] : this.isOnGround;
-        // console.log(this.latitude + ' ' + this.longitude + ' ' + this.altitude);
+
         // Calculate azimuth and elevation angle
         if(newData[14] !== "" && newData[14] !== null
             && newData[15] !== "" && newData[15] !== null

@@ -45,7 +45,7 @@ async function processAdsBData(data) {
             console.log("Airplane ID: " + id);
             console.log("Latitude: " + (airplane.latitude === 9999 ? "Not yet received" : airplane.latitude));
             console.log("Longitude: " + (airplane.longitude === 9999 ? "Not yet received" : airplane.longitude));
-            console.log("Altitude (m): " + (airplane.altitude*0.3048 === -9999*0.3048 ? "Not yet received": airplane.altitude));
+            console.log("Altitude (m): " + (airplane.altitude === -9999 ? "Not yet received": airplane.altitude));
             console.log("Azimuth: " + ( airplane.azimuth < 0 ? "Not enough data" :  airplane.azimuth));
             console.log("Elevation angle: " + (airplane.elevationAngle < 0 ? "Not enough data" : airplane.elevationAngle));
             console.log('---');
